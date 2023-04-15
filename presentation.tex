@@ -121,8 +121,8 @@
   \begin{itemize}
     \item Neural networks (this lecture)
     \item Support vector machines (next lecture)
-    \item Naive bayes
-    \item Linear Regression
+    \item Naive Bayes
+    \item Linear regression
     \item Logistic regression
     \item $k$-nearest neighbours
     \item Random forest
@@ -131,6 +131,39 @@
   
   \note{Read some algorithms descriptions \href{here}{https://www.ibm.com/topics/supervised-learning}
   }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Classical neural networks}
+
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.7\textwidth]{tikz/cnn.pdf}
+  \end{figure}
+
+  \begin{itemize}
+    \item $f_\theta = f\left( W^{\left( 1 \right)}, b^{\left( 1 \right)}W^{\left( 2 \right)}, b^{\left( 2 \right)}, \dots, W^{\left( l \right)}, b^{\left( l \right)} \right)$
+    \item Layered structure: $x^{\left( l+1 \right)} = \sigma\left( W^{\left( l \right)}x^{\left( l \right)} + b^{\left( l \right)} \right)$
+  \end{itemize}
+
+  Furthermore, NNs are universal function approximators\cite{nielsenneural}.
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Classical neural networks}
+  \framesubtitle{Training - backpropagation}
+  
+  backpropagation
+  \begin{itemize}
+    \item Training neural networks uses gradient-based algorithms
+    \item Classical operations
+    \item When we have an operation we can compute $y\left( \theta \right)$ and $\frac{\partial y}{\partial \theta}$
+    \item To compute $\frac{\partial L}{\partial \theta}$ we follow the computational graph \emph{backward} until we get to $\theta$ (chain rule)
+    \item In one fwd pass and one bwd pass we have the derivative
+    \item This is different than QNNs, which use the PSR and every derivative takes two passes ($\pm \pi/2$), times the number of shots.
+  \end{itemize}
+
 \end{frame}
 
 
