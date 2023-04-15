@@ -51,10 +51,11 @@
 	\footnotetext{\begin{tabular}{*{#1}{@{\!}>{\centering\arraybackslash}p{1em}@{\;}p{\textwidth/#1-2em}}}%
 	#2\end{tabular}}}}
 
-\title[]{The Title of the Presentation}
+\title[]{Applied Quantum Algorithms - Lecture 8 - Quantum Machine Learning}
 \institute[]{Delft University of Technology, The Netherlands}
-\author{First Author \and Second Author}
-%\date{}
+\author{Giorgio Tosti Balducci}
+\date{Apr 26, 2023}
+
 
 \begin{document}
 \section{Introduction}
@@ -63,37 +64,37 @@
 \frame{\titlepage}
 }
 
-\begin{frame}[fragile]{Example frame 1} % some commands, e.g. \verb require [fragile]
-This is the first frame.
-
-You can set the blue bar vertical using the option \verb|\usetheme[verticalbar=true]{tud}|.
-
-Set the aspect ratio to 4:3 with the
-documentclass option aspectratio=43. Use aspectratio=169 for wide screen (16:9).
+\begin{frame}{Contents} % some commands, e.g. \verb require [fragile]
+\begin{enumerate}
+  \item Quantum machine learning (QML) concepts
+  \begin{enumerate}
+    \item Review of supervised learning
+    \item Review of classical neural networks (NNs)
+    \item Quantum neural network model
+    \item Embedding data in quantum states
+    \item Why QML?
+    \item Physics-informed neural networks (PINNs): classical and quantum 
+  \end{enumerate}
+  \item Tutorials on PennyLane and Qiskit
+\end{enumerate}
 \end{frame}
 
-\section{Examples}
-\begin{frame}{Example frame 2}
-  \begin{block}{Block}
-    \begin{itemize}
-      \item item 1
-      \item item 2
-    \end{itemize}
-  \end{block}
+\section{Lecture}
+\begin{frame}{Supervised learning}
+  Aim: Given some data and their \textbf{labels}, predict the function\footnote{A more general aim is to predict the posterior probability $p\left(y|x\right)$.} that assing \textbf{unseen} data to the correct label.
+  \begin{align}
+    \mathrm{Given}& D=\left\{ \left( x_i,\, y_i \right)|\,x_i\in S;\, y_i=f(x_i) \right\},\\
+    \mathrm{where}& S\subset \mathbb{R}^n,\\
+    \mathrm{predict}& f:S\rightarrow labels\\
+  \end{align}
 
-  \begin{exampleblock}{Example}
-    \begin{enumerate}
-      \item Sugar in a stirred cup of tea gathers in the middle.
-      \item Rivers often take a detour through flat terrain.
-    \end{enumerate}
-  \end{exampleblock}
-
-  \begin{alertblock}{Alert}
-     Rivers and sweet tea do unexpected things.\cite{Einstein1926}
-  \end{alertblock}
+  \begin{itemize}
+    \item \emph{Classification}: discrete labels
+    \item \emph{Regression}: continuous labels
+  \end{itemize}
 \end{frame}
 
-\begin{frame}{Mass--energy equivalence}
+\begin{frame}{Supervised learning: function family}
 	They say every formula you add to a presentation, will reduce your audience by \SI{50}{\percent}. A simple yet effective way to mitigate this effect, is adding a compact nomenclature to the slides containing formulae.
 	
 	\[E=mc^2\]
@@ -102,10 +103,10 @@ documentclass option aspectratio=43. Use aspectratio=169 for wide screen (16:9).
 	
 	The optional argument specifies the number of column pairs.
 	
-\mininomen[2]{% number of columns
-  $E$ & Energy (\unit{J})                     & $m$ & Mass (\unit{kg}) \\
-  $c$ & Speed of light in vacuum (\unit{m/s}) \\[2ex] % may need some tweaking
-  }
+% \mininomen[2]{% number of columns
+%   $E$ & Energy (\unit{J})                     & $m$ & Mass (\unit{kg}) \\
+%   $c$ & Speed of light in vacuum (\unit{m/s}) \\[2ex] % may need some tweaking
+%   }
 \end{frame}
 
 \begin{frame}{columns}
