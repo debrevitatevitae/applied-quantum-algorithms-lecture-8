@@ -18,6 +18,7 @@
 \usepackage{MnSymbol,wasysym}
 \usepackage{array}
 \usepackage{qrcode}
+\usepackage{hyperref}
 
 \setbeamertemplate{navigation symbols}{} % remove navigation symbols
 \mode<presentation>{\usetheme[verticalbar=false]{tud}}
@@ -75,7 +76,7 @@
     \item Why QML?
     \item Physics-informed neural networks (PINNs): classical and quantum 
   \end{enumerate}
-  \item Tutorials on PennyLane and Qiskit
+  \item Demos on PennyLane and Qiskit
 \end{enumerate}
 \end{frame}
 
@@ -84,7 +85,7 @@
   Aim: Given some data and their \textbf{labels}, predict the function\footnote{A more general aim is to predict the posterior probability $p\left(y|x\right)$.} that assing \textbf{unseen} data to the correct label.
   \begin{align}
     \mathrm{Given}& D=\left\{ \left( x_i,\, y_i \right)|\,x_i\in S;\, y_i=f(x_i) \right\},\\
-    \mathrm{where}& S\subset \mathbb{R}^n,\\
+    \mathrm{where}& S\subseteq \mathbb{R}^n,\\
     \mathrm{predict}& f:S\rightarrow labels\\
   \end{align}
 
@@ -94,37 +95,44 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Supervised learning: function family}
-	They say every formula you add to a presentation, will reduce your audience by \SI{50}{\percent}. A simple yet effective way to mitigate this effect, is adding a compact nomenclature to the slides containing formulae.
-	
-	\[E=mc^2\]
-	
-	If you find this is taking up too much of your precious space, than you are doing something wrong, and it is not adding this little nomenclature.
-	
-	The optional argument specifies the number of column pairs.
-	
-% \mininomen[2]{% number of columns
-%   $E$ & Energy (\unit{J})                     & $m$ & Mass (\unit{kg}) \\
-%   $c$ & Speed of light in vacuum (\unit{m/s}) \\[2ex] % may need some tweaking
-%   }
+\begin{frame}{Supervised learning}
+  \framesubtitle{function family and training}
+	Instead of searching among all possible $f:S\rightarrow labels$, we choose a \emph{function family} or \emph{ansatz}, characterized by \emph{free parameters}.
+
+  \begin{gather*}
+    \left\{ f^\theta|\, f^\theta: S, \Theta \rightarrow labels \right\}\\
+    \Theta \subseteq \mathbb{R}^p
+  \end{gather*}
+
+  \begin{block}{Training a supervised learning model - practical definition}
+    Find $\theta$ s.t. $f_\theta$ best approximizes $f$ w.r.t. a metric of error or \emph{loss}.
+  \end{block}
+
+  \begin{table}[h]
+    \centering
+    \begin{tabular}{ccc}
+      Mean squared error & $ \sum_{i=1}^N \left( y_i - f_\theta\left( x_i \right) \right)^2$ & Regression\\
+      Negative log-likelihood & $ -\log\left( \mathrm{smtg} \right)$& Classification
+    \end{tabular}
+  \end{table}
 \end{frame}
 
-\begin{frame}{columns}
-  \begin{columns}[onlytextwidth]
-    \begin{column}{.5\textwidth}
-      first column
-    \end{column}
-    \begin{column}{.5\textwidth}
-      % square filling the column
-      \textcolor{tudCyan}{\rule{1\columnwidth}{1\columnwidth}}
-      % place an image
-      % horizontal position = 73%
-      % vertical position = 45%
-      % width = 40% of page
-      \absimage{.73, .45}{.40}{tud-logo.pdf}
-    \end{column}
-  \end{columns}
+\begin{frame}{Supervised learning algorithms}
+  \begin{itemize}
+    \item Neural networks (this lecture)
+    \item Support vector machines (next lecture)
+    \item Naive bayes
+    \item Linear Regression
+    \item Logistic regression
+    \item $k$-nearest neighbours
+    \item Random forest
+    \item ...
+  \end{itemize}
+  
+  \note{Read some algorithms descriptions \href{here}{https://www.ibm.com/topics/supervised-learning}
+  }
 \end{frame}
+
 
 \section{Conclusion}
 \begin{frame}[fragile]{animation}
