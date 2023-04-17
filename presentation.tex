@@ -52,6 +52,11 @@
 	\footnotetext{\begin{tabular}{*{#1}{@{\!}>{\centering\arraybackslash}p{1em}@{\;}p{\textwidth/#1-2em}}}%
 	#2\end{tabular}}}}
 
+% New commands (Giorgio)
+\newcommand{\R}{\mathbb{R}}  % real set
+\newcommand{\pdv}[2]{\frac{\partial #1}{\partial #2}}
+
+
 \title[]{Applied Quantum Algorithms - Lecture 8 - Quantum Machine Learning}
 \institute[]{Delft University of Technology, The Netherlands}
 \author{Giorgio Tosti Balducci}
@@ -157,12 +162,32 @@
   backpropagation
   \begin{itemize}
     \item Training neural networks uses gradient-based algorithms
-    \item Classical operations
-    \item When we have an operation we can compute $y\left( \theta \right)$ and $\frac{\partial y}{\partial \theta}$
-    \item To compute $\frac{\partial L}{\partial \theta}$ we follow the computational graph \emph{backward} until we get to $\theta$ (chain rule)
-    \item In one fwd pass and one bwd pass we have the derivative
-    \item This is different than QNNs, which use the PSR and every derivative takes two passes ($\pm \pi/2$), times the number of shots.
+    $$
+      \theta^{(t+1)} = \theta^{(t)} - \eta\nabla\theta^{(t)}
+    $$
+    \item Computation graph: 3 steps
+    \begin{itemize}
+      \item forward direction - get the loss value
+      \item evaluate local gradients
+      \item backward direction: multiplications (chain rule)
+    \end{itemize}
+    \item This is different than QNNs, which breaks the computational graph at the model level
+    \item \begin{itemize}
+      \item More later \dots
+    \end{itemize}
+    \note{for a qnn, we need to evaluate so many quantum circuits: $n_{parameters} * 2 * n_{shots}$, where 2 means the evaluation for $\pm \frac{\pi}{2}$}
   \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Classical neural networks}
+  \framesubtitle{Backpropagation example}
+
+  \begin{itemize}
+    \item 1 hidden layer: 1 - 2 - 1
+  \end{itemize} 
+  
 
 \end{frame}
 
