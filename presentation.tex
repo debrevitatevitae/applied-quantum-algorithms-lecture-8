@@ -19,6 +19,8 @@
 \usepackage{array}
 \usepackage{qrcode}
 \usepackage{hyperref}
+\usepackage{physics}
+\usepackage{qcircuit}
 
 \setbeamertemplate{navigation symbols}{} % remove navigation symbols
 \mode<presentation>{\usetheme[verticalbar=false]{tud}}
@@ -54,7 +56,7 @@
 
 % New commands (Giorgio)
 \newcommand{\R}{\mathbb{R}}  % real set
-\newcommand{\pdv}[2]{\frac{\partial #1}{\partial #2}}
+% \newcommand{\pdv}[2]{\frac{\partial #1}{\partial #2}}
 
 
 \title[]{Applied Quantum Algorithms - Lecture 8 - Quantum Machine Learning}
@@ -186,7 +188,161 @@
   \framesubtitle{Backpropagation example}
 
 
-  \note{leave it blank for drawing the computational graph}
+  \note{leave it blank for drawing the computational graph like in handwritten notes}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Quantum machine learning}
+  \framesubtitle{Some informal definitions}
+  
+  \footnotesize
+  \begin{block}{\textbf{Quantum-enhanced machine learning}}
+    Quantum computation to speed-up classical machine learning operations.
+
+    \ \\
+    \emph{Example}: SVM with quantum linear systems solver algorithm
+
+    \ \\
+    \emph{Limitations}
+    \begin{itemize}
+      \item Input/output problem (QRAM?)
+      \item De-quantization argument: for a fair comparison, \emph{both classical and quantum} algorithm must have access to a QRAM $\rightarrow$ classical algorithm also runs in $O\left( \log(N) \right)$
+    \end{itemize}
+  \end{block}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Quantum machine learning}
+  \framesubtitle{Some informal definitions}
+
+  \begin{block}{\textbf{Machine learning in quantum feature spaces}}
+    Information is \emph{encoded} into quantum states and classical algorithms find the optimal model.
+
+    \begin{itemize}
+      \item Heuristic
+    \end{itemize}
+  \end{block}
+
+\emph{Note}: From here on, we will be focusing on ML in quantum feature spaces. For a review of quantum-enhanced ML, see \cite{Biamonte_2017}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Why QML?}
+  \framesubtitle{The advantage POV}
+
+  As with all quantum algorithms, we ask ourselves: \emph{how is QML better than ML?}
+
+  \ \\
+  Quantum advantage can be proved by
+  \begin{itemize}
+    \item Mapping data to certain states
+    \item These states are hard to produce classically, but easy to produce (BQP) via a quantum algorithm
+    \begin{itemize}
+      \item e.g. by solving the discrete log problem \cite{Liu_2021}
+    \end{itemize}
+    \item We can compute inner products efficiently\footnote{the key idea of kernel theory, more in the next lecture}
+  \end{itemize}
+
+
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Why QML?}
+  \framesubtitle{The advantage POV}
+  However\dots
+
+  \begin{itemize}
+    \item Are there any \emph{practically interesting} dataset in which QML can achieve advantage?
+    \pause
+    \item Is advantage even the right thing to look for?
+  \end{itemize}
+
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Why QML?}
+  \framesubtitle{Is quantum advantage the right goal for quantum machine learning? \cite{Schuld_2022}}
+  
+  Advantage is just one of the possible points of view and possibly not the most useful one.
+  \begin{enumerate}
+    \item What is(are) the fundamental building block(s) of QML models?
+    \begin{itemize}
+      \item a.k.a. what is the \emph{quantum perceptron}?
+    \end{itemize}
+    \item Can classical learning theory give us guarantees on the learning performance of QML models?
+    \begin{itemize}
+      \item Yes, and the link is kernel theory.
+    \end{itemize}
+    \item Can we automate the learning process of (certain) QML models?
+    \begin{itemize}
+      \item In particular, automatic differentiation.
+    \end{itemize}
+  \end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}
+  
+  \centering
+  \Large
+  Quantum neural networks
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{The quantum neural network model}
+
+  3 ingredients
+  \begin{itemize}
+    \item A data encoding unitary: $U(\mathbf{x})$
+    \item A variational unitary (anzatz): $W\left( \mathbf{\theta} \right)$
+    \item An observable (measurement operator): $\mathcal{M}$
+  \end{itemize}
+
+  \[f(\mathbf{x}, \mathbf{\theta}) = \ev{\mathcal{M}}{\psi\left( \mathbf{x}, \mathbf{\theta} \right)},\]
+  where
+  \[\ket{\psi\left( \mathbf{x}, \mathbf{\theta} \right)} = W\left( \mathbf{\theta} \right) U(\mathbf{x}) \ket{0}\]
+  and
+  \[\mathbf{x}\in \R^m,\: \theta\in \R^p\]
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{The quantum neural network model}
+
+  % \begin{figure}[h]
+  %   \mbox{
+  %   \Qcircuit @C=1em @R=.7em {
+  %       \lstick{\ket{0}} & & \multigate{3}{U(\mathbf{x})} & \multigate{3}{W(\theta)} & & \multimeasure{3}{\mathcal{M}}\\
+  %       \lstick{\ket{0}} & & \ghost{U(\mathbf{x})} & \ghost{W(\mathbf{\theta})} & \ghost{\mathcal{M}}\\
+  %       & \vdots & \ghost{U(\mathbf{x})} & \ghost{W(\mathbf{\theta})} & \ghost{\mathcal{M}}\\
+  %       \lstick{\ket{0}} & & \ghost{U(\mathbf{x}) & \ghost{W(\mathbf{\theta})} & \ghost{\mathcal{M}}}
+  %       }
+      
+  % \end{figure}
+
+  \note{left blank for drawing the generic circuit}
+        
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{A simple QNN example}
+
+  
+  \note{draw the simple RX(x)-RZ($\theta$) circuit with X measurement}
 
 \end{frame}
 
