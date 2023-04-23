@@ -59,7 +59,7 @@
 % \newcommand{\pdv}[2]{\frac{\partial #1}{\partial #2}}
 
 
-\title[]{Applied Quantum Algorithms - Lecture 8 - Quantum Machine Learning}
+\title[]{Applied Quantum Algorithms - Lecture 8 - Quantum Neural Networks}
 \institute[]{Delft University of Technology, The Netherlands}
 \author{Giorgio Tosti Balducci}
 \date{Apr 26, 2023}
@@ -346,6 +346,61 @@
 
 \end{frame}
 
+
+\begin{frame}
+  \frametitle{QNN model evaluation}
+
+  The model $f = \ev{\mathcal{M}}_{\mathbf{x},\theta}$ is the expectation value of the observable $\mathcal{M}$ of the state $\psi\left( \mathbf{x}, \mathbf{\theta} \right) $
+  \begin{itemize}
+    \item In practice, we can compute $\ev{\mathcal{M}_{\mathbf{x},\theta}}$ if we know how to measure in $\mathcal{M}$ basis
+    \item See previous slide where we measured in the $X$ basis.
+    \item Alternatively, we use Hadamard\footnote{\url{https://en.wikipedia.org/wiki/Hadamard_test_(quantum_computation)}} or SWAP\footnote{\url{https://en.wikipedia.org/wiki/Swap_test}} tests
+    \item Finite sampling: $O(1/\varepsilon^2)$ measurement to estimate $\ev{M}$ up to precision $\varepsilon$
+    \begin{itemize}
+      \item Due to Chebyshev's inequality
+      \item In practice, a convergence study is necessary
+    \end{itemize}
+  \end{itemize}
+  
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{QNN model training}
+
+  Training is hybrid, as for all variational algorithms. At each epoch
+  \begin{itemize}
+    \item (Quantum step) \emph{Evaluate} the model $f = \ev{\mathcal{M}}_{\mathbf{x},\theta^{(t)}}$ and \emph{maybe} $\grad_\theta f$.
+    \begin{itemize}
+      \item More on gradients later on
+    \end{itemize}
+    \item (Classical step 1) \emph{Forward step} in the computational graph
+    \begin{itemize}
+      \item i.e. we evaluate a loss function $L\left( \theta^{(t)} \right)$ and the local gradients
+    \end{itemize}
+    \item (Classical step 2) \emph{Backward step} in the computational graph
+    \item (Classical step 3) \emph{Parameter update}
+    \[\mathrm{GD:}\qquad \theta^{(t+1)} = \theta^{(t)} - \eta\nabla\theta^{(t)}\]
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{QNN model training}
+
+  \centering
+  \color{red} Do you think it is a good idea to evaluate $\grad_\theta f$ with finite differences? Why? Why not?
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Encoding classical data in quantum states}
+
+  
+
+\end{frame}
 
 \section{Conclusion}
 \begin{frame}[fragile]{animation}
