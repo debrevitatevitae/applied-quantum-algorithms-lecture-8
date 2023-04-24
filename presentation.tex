@@ -82,7 +82,6 @@
     \item Quantum neural network model
     \item Embedding classical data into quantum states
     \item Practical matters
-    \item Physics-informed neural networks (PINNs): classical and quantum 
   \end{enumerate}
   \item Demos on PennyLane and Qiskit
 \end{enumerate}
@@ -90,12 +89,20 @@
 
 \section{Lecture}
 \begin{frame}{Supervised learning}
-  Aim: Given some data and their \textbf{labels}, predict the function\footnote{A more general aim is to predict the posterior probability $p\left(y|x\right)$.} that assing \textbf{unseen} data to the correct label.
-  \begin{align}
-    \mathrm{Given}& D=\left\{ \left( x_i,\, y_i \right)|\,x_i\in S;\, y_i=f(x_i) \right\},\\
-    \mathrm{where}& S\subseteq \mathbb{R}^n,\\
-    \mathrm{predict}& f:S\rightarrow labels\\
-  \end{align}
+  Aim: Given some data and their \textbf{labels}, predict the function\footnote{A different formulation may be to predict the distributions $p(x,y)$ or $p\left(y|x\right)$.} that assing \textbf{unseen} data to the correct label.
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{lc}
+      Given &$D=\left\{ \left( x_i,\, y_i \right)|\,x_i\in S;\, y_i=f(x_i) \right\}$,\\
+    where &$S\subseteq \mathbb{R}^n$,\\
+    predict &$f:S\rightarrow labels$
+    \end{tabular}
+  \end{table}
+  % \begin{align*}
+  %   \mathrm{Given} &D=\left\{ \left( x_i,\, y_i \right)|\,x_i\in S;\, y_i=f(x_i) \right\},\\
+  %   \mathrm{where} &S\subseteq \mathbb{R}^n,\\
+  %   \mathrm{predict} &f:S\rightarrow labels
+  % \end{align*}
 
   \begin{itemize}
     \item \emph{Classification}: discrete labels
@@ -310,9 +317,9 @@
     \item An observable (measurement operator): $\mathcal{M}$
   \end{itemize}
 
-  \[f(\mathbf{x}, \mathbf{\theta}) = \ev{\mathcal{M}}{\psi\left( \mathbf{x}, \mathbf{\theta} \right)},\]
+  \[f(\mathbf{x}, \theta) = \ev{\mathcal{M}}{\psi\left( \mathbf{x}, \theta \right)},\]
   where
-  \[\ket{\psi\left( \mathbf{x}, \mathbf{\theta} \right)} = W\left( \mathbf{\theta} \right) U(\mathbf{x}) \ket{0}\]
+  \[\ket{\psi\left( \mathbf{x}, \theta \right)} = W\left( \theta \right) U(\mathbf{x}) \ket{0}\]
   and
   \[\mathbf{x}\in \R^m,\: \theta\in \R^p\]
 
@@ -397,6 +404,104 @@
 
 \begin{frame}
   \frametitle{Encoding classical data in quantum states}
+
+  A good choice of data embedding can make the difference in terms of
+  \begin{itemize}
+    \item Runtime of the QML routine
+    \begin{itemize}
+      \item how does the number of operations scale in the number of features $N$ and dataset dimension $M$
+    \end{itemize}
+    \item Learning performance
+    \begin{itemize}
+      \item Encoding data means to map them to a high-dimensional Hilbert space
+      \item E.g., in classification, we can linearly separate the data of different classes\footnote{even better, with high \emph{margin}}, but also completely shuffle them!
+    \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Encoding classical data in quantum states}
+  \framesubtitle{Data encoding as a feature map}
+
+  \[\phi\left( \mathbf{x} \right) : \mathcal{X}\rightarrow \mathcal{F}\subseteq \mathcal{H}^{2^n}\]
+
+  \ \\
+  \centering
+  \includegraphics[width=.6\textwidth]{pics/feature-maps.png}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Encoding classical data in quantum states}
+  \framesubtitle{Amplitude encoding}
+
+  We have $\mathbf{x}\in \R^N$. To make it a valid quantum state:
+  \begin{enumerate}
+    \item Normalize: $\frac{\mathbf{x}}{\norm{x}_2}$
+    \item Pad until the closest power of 2: $x_N,\dots,x_{2^n-1}=0$
+  \end{enumerate}
+
+  Amplitude encoding (AE) is the identity transformation of this preprocessed state
+  \[\phi(\mathbf{x})=\ket{x}=\sum_{i=0}^{N-1}x_i\ket{i}\]
+
+  \begin{itemize}
+    \item AE is a linear transformation: if data is not linearly separable in the (normalized and padded) original space, then it won't be in the mapped space.
+    \item num. qubits: $\log(N)$
+    \item runtime: $O(N)$\cite{mottonen2004transformation} 
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Encoding classical data in quantum states}
+  \framesubtitle{Amplitude encoding}
+
+  By adding an additional $\log(M)$ qubits, we can also encode data in superposition
+
+  \[\ket{\psi_\mathbf{X}} = \frac{1}{\sqrt{M}}\sum_{m=0}^{M-1}\sum_{i=0}^{N-1} x_i\ket{i}\ket{m}\]
+
+  \begin{itemize}
+    \item num. qubits: $\log(NM)$
+    \item runtime: $O(NM)$
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Encoding classical data in quantum states}
+  \framesubtitle{Basis encoding}
+
+  
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Encoding classical data in quantum states}
+  \framesubtitle{Basis encoding}
+
+  \centering
+  \color{red} If basis encoding achieves perfect orthogonality between datapoints, why shouldn't we always use it for classification?
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Encoding classical data in quantum states}
+  \framesubtitle{Time-evolution encoding}
+
+  
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Encoding classical data in quantum states}
+  \framesubtitle{Hamiltonian encoding of a dataset}
 
   
 
