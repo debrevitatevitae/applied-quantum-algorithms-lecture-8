@@ -475,6 +475,45 @@
   \frametitle{Encoding classical data in quantum states}
   \framesubtitle{Basis encoding}
 
+  For basis encoding, we first need to choose a binary representation of the features $x_i$. E.g., in floating point
+  \[b_i=b_{i,s} b_{i,n_e-1}\dots b_{i,0}b_{i,n_m-1}\dots b_{i,0}\]
+
+  \ \\
+  With $\tau = 1+n_e+n_m$ we can encode \emph{each feature of each datapoint} into a different basis state. If we concatenate the features:
+  \[\phi(\mathbf{x})=\ket{b^0\dots b^{N-1}}\]
+
+  \ \\
+  Of course, we can also create superpositions
+  \[\ket{\psi_\mathbf{X}} = \frac{1}{\sqrt{M}}\sum_{i=1}^M \ket{\mathbf{x}^{(i)}} \]
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Encoding classical data in quantum states}
+  \framesubtitle{Basis encoding}
+
+  \begin{minipage}{\textwidth}
+    \begin{table}[t]
+      \footnotesize
+      \centering\begin{tabular}{ccc}
+        & Single sample & Dataset\\
+        \hline\\
+        num. qubits & $N\tau$ & $N\tau$\\
+        runtime & $O(N\tau)$ & $O\left( Mn\tau \right)$\cite{ventura1998quantum}\\
+        \hline
+        
+      \end{tabular}
+    
+    \end{table}
+    
+  \end{minipage}
+
+  \vspace{3cm}
+  \begin{minipage}{\textwidth}
+    \note{here include a simple example for basis encoding. For instance $\mathbf{x} = (101, 001)$}
+    
+  \end{minipage}
   
 
 \end{frame}
