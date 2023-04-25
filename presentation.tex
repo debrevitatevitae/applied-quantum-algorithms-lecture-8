@@ -616,8 +616,73 @@
   \end{itemize}
 
 \end{frame}
-    
 
+
+\begin{frame}
+  \frametitle{Encoding classical data in quantum states}
+  \framesubtitle{Quantum models as sums of periodic functions}
+  
+  \footnotesize
+  \begin{enumerate}
+    \item time-evolution embedding: $S(x_i)= e^{iH x_i}$ for feature $i$.
+    \item \emph{layered} model circuit
+    \[U(\mathbf{x}, \theta) = W_{N-1}\left( \theta_{N-1} \right)\prod_{i=N-2}^{0}S_i(x_i)W_i\left( \theta_i \right)\]
+    \item $H =\mathrm{diag\left( \lambda^i_0,\dots \lambda^i_{d-1} \right)}$
+  \end{enumerate}
+
+  Then, the quantum model $f(\mathbf{x},\theta) = \ev{\mathcal{M}}{\psi\left( \mathbf{x}, \theta \right)}$ can be expressed as a multidimensional series of periodic functions\cite{Schuld_2021}
+  \[f(\mathbf{x},\theta) = \sum_{\omega_0\in \Omega_0}\dots \sum_{\omega_{N-1}\in \Omega_{N-1}} c_{\omega_0\dots \omega_{N-1}}\left( \theta \right)e^{i\omega_0x_0}\dots e^{i\omega_{N-1}x_{N-1}},\]
+
+  where the frequencies are completely determined by the eigenvalues of the data-encoding Hamiltonian
+  \[\Omega_i=\left\{ \lambda_s^i-\lambda_t^i|s,t\in\left\{ 1,\dots d \right\} \right\}\]
+
+  
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Encoding classical data in quantum states}
+  \framesubtitle{Quantum models as sums of periodic functions}
+  
+  \footnotesize
+  Furthermore, if $\lambda_s^i, \lambda_t^i$ are integer (s.a. for Pauli gates), $f(\mathbf{x},\theta)$ becomes a \emph{Fourier series}
+  \[f(\mathbf{x},\theta) = \sum_{n_0\in \Omega_0}\dots \sum_{n_{N-1}\in \Omega_{N-1}} c_{n_0,\dots n_{N-1}} e^{in_0 x_0}\dots e^{in_{N-1} x_{N-1}}\]
+
+  In particular, by repeating the encoding of a feature, we can obtain multiple of the period
+  \ \\
+  For instance, if two of the features are the same, then $x_i=x_j$
+  \[e^{in_i x_i}e^{in_j x_j} = e^{i2n x}\] 
+
+  \ \\
+  From this observation derives the \emph{universality} of quantum models with time evolution encoding.
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Practical matters}
+  \framesubtitle{Access to Fourier coefficients}
+  
+  
+  
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Practical matters}
+  \framesubtitle{Gradients}
+  
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Practical matters}
+  \framesubtitle{Barren plateaus}
+  
+
+\end{frame}
 
 \section{Conclusion}
 \begin{frame}[fragile]{animation}
