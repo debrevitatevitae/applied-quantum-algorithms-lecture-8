@@ -58,6 +58,9 @@
 \newcommand{\R}{\mathbb{R}}  % real set
 % \newcommand{\pdv}[2]{\frac{\partial #1}{\partial #2}}
 
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
 
 \title[]{Applied Quantum Algorithms - Lecture 8 - Quantum Neural Networks}
 \institute[]{Delft University of Technology, The Netherlands}
@@ -533,7 +536,45 @@
   \frametitle{Encoding classical data in quantum states}
   \framesubtitle{Time-evolution encoding}
 
-  
+  We're not constrained to \emph{exactly} representing features. For instance, each feature can be the \emph{evolution time of a certain Hamiltonian}
+  \[\phi(\mathbf{x})=e^{-iH\mathbf{x}}\ket{0}\]
+
+  \ \\
+  Typically, we do \emph{angle encoding}, i.e. each feature is encoded as a Pauli rotation.
+
+  \ \\
+  \emph{Example}: one feature, per rotation, per qubit, using Pauli $X$
+  \[\phi(\mathbf{x})=e^{-iXx_{N-1}}\otimes e^{-iXx_{N-2}}\otimes\dots\otimes e^{-iXx_0}\ket{0}\]
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Encoding classical data in quantum states}
+  \framesubtitle{Time-evolution encoding}
+
+  For angle encoding:
+
+  \begin{minipage}{\textwidth}
+    \begin{table}[t]
+      \footnotesize
+      \centering\begin{tabular}{ccc}
+        & Single sample & Dataset\\
+        \hline\\
+        num. qubits & $N$ & $N\ceil*{\log(M)}$\\
+        runtime & $O(N)$ & $O\left( MN \right)$\\
+        \hline
+        
+      \end{tabular}
+    
+    \end{table}
+    
+  \end{minipage}
+
+  \vspace{3cm}
+  \begin{minipage}{\textwidth}
+    \note{include example of rotation encoding with 3 qubits}
+  \end{minipage}
 
 \end{frame}
 
@@ -542,9 +583,41 @@
   \frametitle{Encoding classical data in quantum states}
   \framesubtitle{Hamiltonian encoding of a dataset}
 
+  If we keep the original data matrix $\mathbf{X}\in\R^{M\times N}$ and we can rewrite it as an Hermitian matrix $H_\mathbf{X}$, then we can encode the entire dataset as a Hamiltonian simulation
+  \[\phi:\ket{0} \rightarrow e^{-iH_{\mathbf{X}}t}\]
+
+  \begin{itemize}
+    \item The general way to simulate $H_{\mathbf{X}}$ is to use \emph{Trotterization}\cite{lloyd_1996}
+    \begin{itemize}
+      \item \emph{Requirement}: we need to know how to decompose $H_{\mathbf{X}}$ in terms that are \emph{easy to simulate}.
+      \item We can always decompose an Hermitian matrix in $O(MN)$ Pauli strings.
+    \end{itemize}
+    \item More efficient algorithms exist for \emph{sparse} Hamiltonians, but they require an \emph{oracle}
+    \begin{itemize}
+      \item Row $i$, $j$th non-zero element
+      \[\ket{i,j,0}\rightarrow \ket{i,j,H_{ij}}\]
+      \item Likely need to hard-code it and full of multi-controlled gates
+    \end{itemize}
+  \end{itemize}
   
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Encoding classical data in quantum states}
+  \framesubtitle{Hamiltonian encoding of a dataset}
+
+  \begin{itemize}
+    \item Num. qubits: $\log(N)$
+    \item Runtime: $O(MN)$ or $O(\log(MN))$
+    \begin{itemize}
+      \item $O(\log(MN))$ only for sparse $\mathbf{X}$ and a few other cases.
+    \end{itemize}
+  \end{itemize}
 
 \end{frame}
+    
+
 
 \section{Conclusion}
 \begin{frame}[fragile]{animation}
