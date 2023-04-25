@@ -647,7 +647,7 @@
   
   \footnotesize
   Furthermore, if $\lambda_s^i, \lambda_t^i$ are integer (s.a. for Pauli gates), $f(\mathbf{x},\theta)$ becomes a \emph{Fourier series}
-  \[f(\mathbf{x},\theta) = \sum_{n_0\in \Omega_0}\dots \sum_{n_{N-1}\in \Omega_{N-1}} c_{n_0,\dots n_{N-1}} e^{in_0 x_0}\dots e^{in_{N-1} x_{N-1}}\]
+  \[f(\mathbf{x},\theta) = \sum_{n_0\in \Omega_0}\dots \sum_{n_{N-1}\in \Omega_{N-1}} c_{n_0,\dots n_{N-1}}\left( \theta \right) e^{in_0 x_0}\dots e^{in_{N-1} x_{N-1}}\]
 
   In particular, by repeating the encoding of a feature, we can obtain multiple of the period
   \ \\
@@ -664,7 +664,16 @@
   \frametitle{Practical matters}
   \framesubtitle{Access to Fourier coefficients}
   
-  
+  \footnotesize
+  What about the coefficients $c_{n_0,\dots n_{N-1}}\left( \theta \right)$?
+  \begin{itemize}
+    \item All the elements of the circuit model determine them (data encoding, ansatz, measurement).
+    \item No matter the frequency that we encode for $x_i$, if some $c_{n_i}=0$, then we cannot \emph{access} those frequencies.
+    \item How each element affects each coefficient is a matter of active research.
+  \end{itemize}
+
+  \centering
+  \includegraphics[width=.6\textwidth]{pics/coefficients-access.png}
   
 \end{frame}
 
@@ -673,6 +682,44 @@
   \frametitle{Practical matters}
   \framesubtitle{Gradients}
   
+  Computing gradients is done with the \emph{parameter shift rule} (PSR). E.g. for Pauli gates:
+  \[\pdv{f}{\theta_i}=\frac{f\left( \theta_i + s \right) - f\left( \theta_i - s \right)}{2}\]
+
+  How many \emph{model evaluations} we need to compute the \emph{full gradient}?
+
+  \vfill
+  \begin{table}[htbp]
+    \centering\begin{tabular}{cc}
+      backpropagation & 2 \\
+      PSR & $ 2 n_{\mathrm{params}} n_{\mathrm{shots}}$
+    \end{tabular}
+  \end{table}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Practical matters}
+  \framesubtitle{Gradients}
+
+  \centering
+  \textcolor{red}{Is this a fair comparison?}
+
+  \vspace{2em}
+  Not really\dots
+
+  \footnotesize
+  \begin{table}[htbp]
+    \centering
+    \begin{tabular}{ccccc}
+      \hline\\
+      & n. steps& $O(N)$ linear algebra & parallelization & optimized libraries\\
+      \hline\\
+      Classical & + & - & ++ & ++ \\
+      Quantum & -- & + & + & +\\
+      \hline
+    \end{tabular}
+  \end{table}
 
 \end{frame}
 
@@ -681,43 +728,58 @@
   \frametitle{Practical matters}
   \framesubtitle{Barren plateaus}
   
+  \centering
+  \includegraphics[width=.55\textwidth]{pics/bp.jpeg}
+
+  \footnotesize
+  \begin{align*}
+    \mathrm{Var}\left[ \partial_{\theta_i} C\left( \theta \right) \right]\leq F(n), \\
+    F(n)\in O\left( \frac{1}{b^n} \right), \: b>1
+  \end{align*}
+
+  \begin{itemize}
+    \item Different reasons, the main one is the ansatz $W(\theta)$
+    \item \emph{Problem-agnostic} ansatze suffer from BPs with high $n$ and high depths
+  \end{itemize}
+  
+  
 
 \end{frame}
 
-\section{Conclusion}
-\begin{frame}[fragile]{animation}
-  \vfill
-  Some commands take optional arguments in the form of \verb|<x-y>|,
-  where \verb|x| is the first `sub-frame' on which the context is shown,
-  and \verb|y| is the last. \verb|x| or \verb|y| can be replaced by \verb|+|,
-  referring to `the next sub-frame'. 
-  \vfill
-  \begin{columns}[onlytextwidth]
-  \begin{column}{.5\textwidth}
-    \begin{enumerate}
-      \item<+-> uncovered\ldots
-      \item<+-> one\ldots
-      \item<+-> by\ldots
-      \item<+-> one.
-    \end{enumerate}
-    \end{column}
-  \begin{column}{.5\textwidth}
-      Using only:\only<1>{1}\only<2>{2}\only<3>{3}
+% \section{Conclusion}
+% \begin{frame}[fragile]{animation}
+%   \vfill
+%   Some commands take optional arguments in the form of \verb|<x-y>|,
+%   where \verb|x| is the first `sub-frame' on which the context is shown,
+%   and \verb|y| is the last. \verb|x| or \verb|y| can be replaced by \verb|+|,
+%   referring to `the next sub-frame'. 
+%   \vfill
+%   \begin{columns}[onlytextwidth]
+%   \begin{column}{.5\textwidth}
+%     \begin{enumerate}
+%       \item<+-> uncovered\ldots
+%       \item<+-> one\ldots
+%       \item<+-> by\ldots
+%       \item<+-> one.
+%     \end{enumerate}
+%     \end{column}
+%   \begin{column}{.5\textwidth}
+%       Using only:\only<1>{1}\only<2>{2}\only<3>{3}
 
-      Using onslide:\onslide<1>{1}\onslide<2>{2}\onslide<3>{3}
+%       Using onslide:\onslide<1>{1}\onslide<2>{2}\onslide<3>{3}
 
-      Using pause:\pause1\pause2\pause3
-  \end{column}
-  \end{columns}
-  \vfill
-  For more advanced animations, see \S 14 of the manual:\\
-  \url{https://www.ctan.org/pkg/beamer}
-  % \url{https://www.ctan.org/pkg/animate}\\
-  % \url{https://www.ctan.org/pkg/media9}
-  \vfill
-  % \transduration{2} automatic progression of slides
-  \transpush<1>
-\end{frame}
+%       Using pause:\pause1\pause2\pause3
+%   \end{column}
+%   \end{columns}
+%   \vfill
+%   For more advanced animations, see \S 14 of the manual:\\
+%   \url{https://www.ctan.org/pkg/beamer}
+%   % \url{https://www.ctan.org/pkg/animate}\\
+%   % \url{https://www.ctan.org/pkg/media9}
+%   \vfill
+%   % \transduration{2} automatic progression of slides
+%   \transpush<1>
+% \end{frame}
 
 \begin{frame}
   Thanks for your attention.
