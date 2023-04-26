@@ -92,7 +92,8 @@
 
 \section{Lecture}
 \begin{frame}{Supervised learning}
-  Aim: Given some data and their \textbf{labels}, predict the function\footnote{A different formulation may be to predict the distributions $p(x,y)$ or $p\left(y|x\right)$.} that assing \textbf{unseen} data to the correct label.
+  Aim: Given some data and their \textbf{labels}, predict the function\footnote{A different formulation may be to predict the distributions $p(x,y)$ or $p\left(y|x\right)$.} that assigns \textbf{unseen} data to the correct label.
+  \pause
   \begin{table}[htbp]
     \centering
     \begin{tabular}{lc}
@@ -107,6 +108,7 @@
   %   \mathrm{predict} &f:S\rightarrow labels
   % \end{align*}
 
+  \pause
   \begin{itemize}
     \item \emph{Classification}: discrete labels
     \item \emph{Regression}: continuous labels
@@ -118,19 +120,21 @@
 	Instead of searching among all possible $f:S\rightarrow labels$, we choose a \emph{function family} or \emph{ansatz}, characterized by \emph{free parameters}.
 
   \begin{gather*}
-    \left\{ f^\theta|\, f^\theta: S, \Theta \rightarrow labels \right\}\\
+    \left\{ f_\theta|\, f_\theta: S, \Theta \rightarrow labels \right\}\\
     \Theta \subseteq \mathbb{R}^p
   \end{gather*}
 
+  \pause
   \begin{block}{Training a supervised learning model - practical definition}
     Find $\theta$ s.t. $f_\theta$ best approximizes $f$ w.r.t. a metric of error or \emph{loss}.
   \end{block}
 
+  \pause
   \begin{table}[h]
     \centering
     \begin{tabular}{ccc}
       Mean squared error & $ \sum_{i=1}^N \left( y_i - f_\theta\left( x_i \right) \right)^2$ & Regression\\
-      Negative log-likelihood & $ -\log\left( \mathrm{smtg} \right)$& Classification
+      Hinge loss & $ \sum_{i=1}^N \mathrm{max}\left( 0, 1-y_if(x_i) \right)$& Classification
     \end{tabular}
   \end{table}
 \end{frame}
@@ -139,12 +143,12 @@
   \begin{itemize}
     \item Neural networks (this lecture)
     \item Support vector machines (next lecture)
-    \item Naive Bayes
-    \item Linear regression
-    \item Logistic regression
-    \item $k$-nearest neighbours
-    \item Random forest
-    \item ...
+    \item<2-> Naive Bayes
+    \item<2-> Linear regression
+    \item<2-> Logistic regression
+    \item<2-> $k$-nearest neighbours
+    \item<2-> Random forest
+    \item<2-> ...
   \end{itemize}
   
   \note{Read some algorithms descriptions \href{here}{https://www.ibm.com/topics/supervised-learning}
@@ -159,11 +163,13 @@
     \includegraphics[width=.7\textwidth]{tikz/cnn.pdf}
   \end{figure}
 
+  \pause
   \begin{itemize}
-    \item $f_\theta = f\left( W^{\left( 1 \right)}, b^{\left( 1 \right)}W^{\left( 2 \right)}, b^{\left( 2 \right)}, \dots, W^{\left( l \right)}, b^{\left( l \right)} \right)$
-    \item Layered structure: $x^{\left( l+1 \right)} = \sigma\left( W^{\left( l \right)}x^{\left( l \right)} + b^{\left( l \right)} \right)$
+    \item $f_\theta = f\left( \mathbf{x}, W^{\left( 1 \right)}, \mathbf{b}^{\left( 1 \right)}W^{\left( 2 \right)}, \mathbf{b}^{\left( 2 \right)}, \dots, W^{\left( l \right)}, \mathbf{b}^{\left( l \right)} \right)$
+    \item Layered structure: $\mathbf{x}^{\left( l+1 \right)} = \sigma\left( W^{\left( l \right)}\mathbf{x}^{\left( l \right)} + \mathbf{b}^{\left( l \right)} \right)$
   \end{itemize}
 
+  \pause
   Furthermore, NNs are universal function approximators\cite{nielsenneural}.
 
 \end{frame}
@@ -172,24 +178,49 @@
   \frametitle{Classical neural networks}
   \framesubtitle{Training - backpropagation}
   
-  backpropagation
-  \begin{itemize}
-    \item Training neural networks uses gradient-based algorithms
-    $$
-      \theta^{(t+1)} = \theta^{(t)} - \eta\nabla\theta^{(t)}
-    $$
-    \item Computation graph: 3 steps
-    \begin{itemize}
-      \item forward direction - get the loss value
-      \item evaluate local gradients
-      \item backward direction: multiplications (chain rule)
-    \end{itemize}
-    \item This is different than QNNs, which breaks the computational graph at the model level
-    \item \begin{itemize}
-      \item More later \dots
-    \end{itemize}
-    \note{for a qnn, we need to evaluate so many quantum circuits: $n_{parameters} * 2 * n_{shots}$, where 2 means the evaluation for $\pm \frac{\pi}{2}$}
-  \end{itemize}
+    Training neural networks uses gradient-based algorithms
+    \[\theta^{(t+1)} = \theta^{(t)} - \eta\nabla_{\theta^{(t)}}L\]
+
+    \pause
+    Once we define
+    \begin{enumerate}
+      \item free parameters
+      \item model
+      \item loss function
+    \end{enumerate}
+
+    we can build the so-called  \emph{computation graph}.
+
+    \pause
+    \centering
+    \includegraphics[width=.6\textwidth]{pics/computation-graph.jpeg}
+    
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Classical neural networks}
+  \framesubtitle{Training - backpropagation}
+
+  To build the gradient at time (epoch) $t$, we need 2 steps
+  \begin{enumerate}
+    \item \emph{forward} direction - get the loss value and evaluate local gradients
+      \item \emph{backward} direction: multiplications (chain rule)
+  \end{enumerate}
+
+  \pause
+  It works differently in QNNs, since \emph{we cannot store intermediate gradients}, due to the no-cloning theorem. More later\dots
+
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Intermezzo}
+  \framesubtitle{Computation graph with QNN}
+
+  
 
 \end{frame}
 
@@ -215,6 +246,7 @@
     \emph{Example}: SVM with quantum linear systems solver algorithm
 
     \ \\
+    \pause
     \emph{Limitations}
     \begin{itemize}
       \item Input/output problem (QRAM?)
@@ -230,13 +262,10 @@
 
   \begin{block}{\textbf{Machine learning in quantum feature spaces}}
     Information is \emph{encoded} into quantum states and classical algorithms find the optimal model.
-
-    \begin{itemize}
-      \item Heuristic
-    \end{itemize}
   \end{block}
 
-\emph{Note}: From here on, we will be focusing on ML in quantum feature spaces. For a review of quantum-enhanced ML, see \cite{Biamonte_2017}
+  \onslide<2>{\emph{Note}: From here on, we will be focusing on ML in quantum feature spaces. For a review of quantum-enhanced ML, see \cite{Biamonte_2017}}
+  
 
 \end{frame}
 
@@ -248,6 +277,7 @@
   As with all quantum algorithms, we ask ourselves: \emph{how is QML better than ML?}
 
   \ \\
+  \pause
   Quantum advantage can be proved by
   \begin{itemize}
     \item Mapping data to certain states
@@ -282,30 +312,21 @@
   \frametitle{Why QML?}
   \framesubtitle{Is quantum advantage the right goal for quantum machine learning? \cite{Schuld_2022}}
   
-  Advantage is just one of the possible points of view and possibly not the most useful one.
+  Advantage is just one of the possible points of view and maybe not the most useful one.
   \begin{enumerate}
-    \item What is(are) the fundamental building block(s) of QML models?
+    \item<2-> What is(are) the fundamental building block(s) of QML models?
     \begin{itemize}
-      \item a.k.a. what is the \emph{quantum perceptron}?
+      \item<2-> a.k.a. what is the \emph{quantum perceptron}?
     \end{itemize}
-    \item Can classical learning theory give us guarantees on the learning performance of QML models?
+    \item<3-> Can classical learning theory give us guarantees on the learning performance of QML models?
     \begin{itemize}
-      \item Yes, and the link is kernel theory.
+      \item<3-> Yes, and the link is kernel theory.
     \end{itemize}
-    \item Can we automate the learning process of (certain) QML models?
+    \item<4-> Can we automate the learning process of (certain) QML models?
     \begin{itemize}
-      \item In particular, automatic differentiation.
+      \item<4-> In particular, automatic differentiation.
     \end{itemize}
   \end{enumerate}
-
-\end{frame}
-
-
-\begin{frame}
-  
-  \centering
-  \Large
-  Quantum neural networks
 
 \end{frame}
 
@@ -320,7 +341,9 @@
     \item An observable (measurement operator): $\mathcal{M}$
   \end{itemize}
 
+  \pause
   \[f(\mathbf{x}, \theta) = \ev{\mathcal{M}}{\psi\left( \mathbf{x}, \theta \right)},\]
+  \pause
   where
   \[\ket{\psi\left( \mathbf{x}, \theta \right)} = W\left( \theta \right) U(\mathbf{x}) \ket{0}\]
   and
@@ -362,13 +385,13 @@
 
   The model $f = \ev{\mathcal{M}}_{\mathbf{x},\theta}$ is the expectation value of the observable $\mathcal{M}$ of the state $\psi\left( \mathbf{x}, \mathbf{\theta} \right) $
   \begin{itemize}
-    \item In practice, we can compute $\ev{\mathcal{M}_{\mathbf{x},\theta}}$ if we know how to measure in $\mathcal{M}$ basis
-    \item See previous slide where we measured in the $X$ basis.
-    \item Alternatively, we use Hadamard\footnote{\url{https://en.wikipedia.org/wiki/Hadamard_test_(quantum_computation)}} or SWAP\footnote{\url{https://en.wikipedia.org/wiki/Swap_test}} tests
-    \item Finite sampling: $O(1/\varepsilon^2)$ measurement to estimate $\ev{M}$ up to precision $\varepsilon$
+    \item<2-> In practice, we can compute $\ev{\mathcal{M}_{\mathbf{x},\theta}}$ if we know how to measure in $\mathcal{M}$ basis
+    \item<2-> See previous slide where we measured in the $X$ basis.
+    \item<3-> Alternatively, we use Hadamard\footnote{\url{https://en.wikipedia.org/wiki/Hadamard_test_(quantum_computation)}} or SWAP\footnote{\url{https://en.wikipedia.org/wiki/Swap_test}} tests
+    \item<4-> Finite sampling: $O(1/\varepsilon^2)$ measurement to estimate $\ev{M}$ up to precision $\varepsilon$
     \begin{itemize}
-      \item Due to Chebyshev's inequality
-      \item In practice, a convergence study is necessary
+      \item<4-> Due to Chebyshev's inequality
+      \item<4-> In practice, a convergence study is necessary
     \end{itemize}
   \end{itemize}
   
@@ -380,19 +403,20 @@
   \frametitle{QNN model training}
 
   Training is hybrid, as for all variational algorithms. At each epoch
-  \begin{itemize}
-    \item (Quantum step) \emph{Evaluate} the model $f = \ev{\mathcal{M}}_{\mathbf{x},\theta^{(t)}}$ and \emph{maybe} $\grad_\theta f$.
+  \pause
+  \begin{enumerate}
+    \item (Quantum step) \emph{Evaluate} the model $f = \ev{\mathcal{M}}_{\mathbf{x},\theta^{(t)}}$ and maybe $\grad_\theta f$.
     \begin{itemize}
-      \item More on gradients later on
+      \item More on gradients later on\dots
     \end{itemize}
-    \item (Classical step 1) \emph{Forward step} in the computational graph
+    \item (Classical step 1) \emph{Forward step} in the computation graph.
     \begin{itemize}
-      \item i.e. we evaluate a loss function $L\left( \theta^{(t)} \right)$ and the local gradients
+      \item i.e. we evaluate a loss function $L\left( \theta^{(t)} \right)$ and the local gradients.
     \end{itemize}
-    \item (Classical step 2) \emph{Backward step} in the computational graph
-    \item (Classical step 3) \emph{Parameter update}
-    \[\mathrm{GD:}\qquad \theta^{(t+1)} = \theta^{(t)} - \eta\nabla\theta^{(t)}\]
-  \end{itemize}
+    \item (Classical step 2) \emph{Backward step} in the computational graph.
+    \item (Classical step 3) \emph{Parameter update}.
+    \[\mathrm{GD:}\qquad \theta^{(t+1)} = \theta^{(t)} - \eta\grad_{\theta^{(t)}} L\]
+  \end{enumerate}
 
 \end{frame}
 
@@ -408,16 +432,17 @@
 \begin{frame}
   \frametitle{Encoding classical data in quantum states}
 
-  A good choice of data embedding can make the difference in terms of
+  \onslide<2>{A good choice of data embedding can make the difference in terms of}
+
   \begin{itemize}
-    \item Runtime of the QML routine
+    \item<3-> Runtime of the QML routine
     \begin{itemize}
-      \item how does the number of operations scale in the number of features $N$ and dataset dimension $M$
+      \item<3-> how does the number of operations scale in the number of features $N$ and dataset dimension $M$
     \end{itemize}
-    \item Learning performance
+    \item<4-> Learning performance
     \begin{itemize}
-      \item Encoding data means to map them to a high-dimensional Hilbert space
-      \item E.g., in classification, we can linearly separate the data of different classes\footnote{even better, with high \emph{margin}}, but also completely shuffle them!
+      \item<4-> Encoding data means to \emph{map them to a high-dimensional Hilbert space}
+      \item<4-> E.g., in classification, we can linearly separate the data of different classes\footnote{even better, with high \emph{margin}}, but also completely shuffle them!
     \end{itemize}
   \end{itemize}
 
@@ -440,19 +465,22 @@
   \frametitle{Encoding classical data in quantum states}
   \framesubtitle{Amplitude encoding}
 
+  \pause
   We have $\mathbf{x}\in \R^N$. To make it a valid quantum state:
   \begin{enumerate}
     \item Normalize: $\frac{\mathbf{x}}{\norm{x}_2}$
     \item Pad until the closest power of 2: $x_N,\dots,x_{2^n-1}=0$
   \end{enumerate}
 
+  \pause
   Amplitude encoding (AE) is the identity transformation of this preprocessed state
   \[\phi(\mathbf{x})=\ket{x}=\sum_{i=0}^{N-1}x_i\ket{i}\]
 
+  \pause
   \begin{itemize}
     \item AE is a linear transformation: if data is not linearly separable in the (normalized and padded) original space, then it won't be in the mapped space.
     \item num. qubits: $\log(N)$
-    \item runtime: $O(N)$\cite{mottonen2004transformation} 
+    \item runtime: $O(N)$\cite{mottonen2004transformation} \emph{in general}
   \end{itemize}
 
 \end{frame}
@@ -464,7 +492,7 @@
 
   By adding an additional $\log(M)$ qubits, we can also encode data in superposition
 
-  \[\ket{\psi_\mathbf{X}} = \frac{1}{\sqrt{M}}\sum_{m=0}^{M-1}\sum_{i=0}^{N-1} x_i\ket{i}\ket{m}\]
+  \[\ket{\psi_\mathbf{X}} = \frac{1}{\sqrt{M}}\sum_{m=0}^{M-1}\sum_{i=0}^{N-1} x_i\ket{i}\ket{m} = \frac{1}{\sqrt{M}}\sum_{m=0}^{M-1} \ket{\psi_{\mathbf{x}_m}}\ket{m}\]
 
   \begin{itemize}
     \item num. qubits: $\log(NM)$
@@ -478,14 +506,17 @@
   \frametitle{Encoding classical data in quantum states}
   \framesubtitle{Basis encoding}
 
+  \pause
   For basis encoding, we first need to choose a binary representation of the features $x_i$. E.g., in floating point
   \[b_i=b_{i,s} b_{i,n_e-1}\dots b_{i,0}b_{i,n_m-1}\dots b_{i,0}\]
 
   \ \\
+  \pause
   With $\tau = 1+n_e+n_m$ we can encode \emph{each feature of each datapoint} into a different basis state. If we concatenate the features:
-  \[\phi(\mathbf{x})=\ket{b^0\dots b^{N-1}}\]
+  \[\phi(\mathbf{x})=\ket{b_0\dots b_{N-1}}\]
 
   \ \\
+  \pause
   Of course, we can also create superpositions
   \[\ket{\psi_\mathbf{X}} = \frac{1}{\sqrt{M}}\sum_{i=1}^M \ket{\mathbf{x}^{(i)}} \]
 
@@ -536,13 +567,16 @@
   \frametitle{Encoding classical data in quantum states}
   \framesubtitle{Time-evolution encoding}
 
+  \pause
   We're not constrained to \emph{exactly} representing features. For instance, each feature can be the \emph{evolution time of a certain Hamiltonian}
   \[\phi(\mathbf{x})=e^{-iH\mathbf{x}}\ket{0}\]
 
   \ \\
+  \pause
   Typically, we do \emph{angle encoding}, i.e. each feature is encoded as a Pauli rotation.
 
   \ \\
+  \pause
   \emph{Example}: one feature, per rotation, per qubit, using Pauli $X$
   \[\phi(\mathbf{x})=e^{-iXx_{N-1}}\otimes e^{-iXx_{N-2}}\otimes\dots\otimes e^{-iXx_0}\ket{0}\]
 
@@ -571,6 +605,7 @@
     
   \end{minipage}
 
+  \pause
   \vspace{3cm}
   \begin{minipage}{\textwidth}
     \note{include example of rotation encoding with 3 qubits}
@@ -583,20 +618,21 @@
   \frametitle{Encoding classical data in quantum states}
   \framesubtitle{Hamiltonian encoding of a dataset}
 
+  \pause
   If we keep the original data matrix $\mathbf{X}\in\R^{M\times N}$ and we can rewrite it as an Hermitian matrix $H_\mathbf{X}$, then we can encode the entire dataset as a Hamiltonian simulation
   \[\phi:\ket{0} \rightarrow e^{-iH_{\mathbf{X}}t}\]
 
   \begin{itemize}
-    \item The general way to simulate $H_{\mathbf{X}}$ is to use \emph{Trotterization}\cite{lloyd_1996}
+    \item<3-> The general way to simulate $H_{\mathbf{X}}$ is to use \emph{Trotterization}\cite{lloyd_1996}
     \begin{itemize}
-      \item \emph{Requirement}: we need to know how to decompose $H_{\mathbf{X}}$ in terms that are \emph{easy to simulate}.
-      \item We can always decompose an Hermitian matrix in $O(MN)$ Pauli strings.
+      \item<4-> \emph{Requirement}: we need to know how to decompose $H_{\mathbf{X}}$ in terms that are \emph{easy to simulate}.
+      \item<4-> We can always decompose an Hermitian matrix in $O(MN)$ Pauli strings.
     \end{itemize}
-    \item More efficient algorithms exist for \emph{sparse} Hamiltonians, but they require an \emph{oracle}
+    \item<5-> More efficient algorithms exist for \emph{sparse} Hamiltonians, but they require an \emph{oracle}
     \begin{itemize}
-      \item Row $i$, $j$th non-zero element
+      \item<6-> Row $i$, $j$th non-zero element
       \[\ket{i,j,0}\rightarrow \ket{i,j,H_{ij}}\]
-      \item Likely need to hard-code it and full of multi-controlled gates
+      \item<6-> Likely need to hard-code it and full of multi-controlled gates
     \end{itemize}
   \end{itemize}
   
@@ -623,6 +659,7 @@
   \framesubtitle{Quantum models as sums of periodic functions}
   
   \footnotesize
+  \pause
   \begin{enumerate}
     \item time-evolution embedding: $S(x_i)= e^{iH x_i}$ for feature $i$.
     \item \emph{layered} model circuit
@@ -630,10 +667,12 @@
     \item $H =\mathrm{diag\left( \lambda^i_0,\dots \lambda^i_{d-1} \right)}$
   \end{enumerate}
 
+  \pause
   Then, the quantum model $f(\mathbf{x},\theta) = \ev{\mathcal{M}}{\psi\left( \mathbf{x}, \theta \right)}$ can be expressed as a multidimensional series of periodic functions\cite{Schuld_2021}
   \[f(\mathbf{x},\theta) = \sum_{\omega_0\in \Omega_0}\dots \sum_{\omega_{N-1}\in \Omega_{N-1}} c_{\omega_0\dots \omega_{N-1}}\left( \theta \right)e^{i\omega_0x_0}\dots e^{i\omega_{N-1}x_{N-1}},\]
 
-  where the frequencies are completely determined by the eigenvalues of the data-encoding Hamiltonian
+  \pause
+  where \textbf{the frequencies are completely determined by the eigenvalues of the data-encoding Hamiltonian}
   \[\Omega_i=\left\{ \lambda_s^i-\lambda_t^i|s,t\in\left\{ 1,\dots d \right\} \right\}\]
 
   
@@ -649,31 +688,33 @@
   Furthermore, if $\lambda_s^i, \lambda_t^i$ are integer (s.a. for Pauli gates), $f(\mathbf{x},\theta)$ becomes a \emph{Fourier series}
   \[f(\mathbf{x},\theta) = \sum_{n_0\in \Omega_0}\dots \sum_{n_{N-1}\in \Omega_{N-1}} c_{n_0,\dots n_{N-1}}\left( \theta \right) e^{in_0 x_0}\dots e^{in_{N-1} x_{N-1}}\]
 
-  In particular, by repeating the encoding of a feature, we can obtain multiple of the period
+  \pause
+  In particular, by repeating the encoding of a feature, we can obtain multiple of the period.
   \ \\
-  For instance, if two of the features are the same, then $x_i=x_j$
-  \[e^{in_i x_i}e^{in_j x_j} = e^{i2n x}\] 
+  For instance, if two of the features are the same, then $x_i=x_j=x$
+  \[e^{in_i x_i}e^{in_j x_j} = e^{i\left( n_i+n_j \right) x}\] 
 
   \ \\
-  From this observation derives the \emph{universality} of quantum models with time evolution encoding.
+  \pause
+  From this observation and the universality of Fourier series follows the \emph{universality of quantum models with time evolution encoding}.
 
 \end{frame}
 
 
 \begin{frame}
   \frametitle{Practical matters}
-  \framesubtitle{Access to Fourier coefficients}
+  \framesubtitle{Access to Fourier coefficients in time evolution encoding}
   
   \footnotesize
   What about the coefficients $c_{n_0,\dots n_{N-1}}\left( \theta \right)$?
   \begin{itemize}
-    \item All the elements of the circuit model determine them (data encoding, ansatz, measurement).
-    \item No matter the frequency that we encode for $x_i$, if some $c_{n_i}=0$, then we cannot \emph{access} those frequencies.
-    \item How each element affects each coefficient is a matter of active research.
+    \item<2-> All the elements of the circuit model determine them (data encoding, ansatz, measurement).
+    \item<3-> No matter the frequency that we encode for $x_i$, if some $c_{n_i}=0$, then we cannot \emph{access} those frequencies.
+    \item<4-> How each element affects each coefficient is a matter of active research.
   \end{itemize}
 
   \centering
-  \includegraphics[width=.6\textwidth]{pics/coefficients-access.png}
+  \onslide<4>{\includegraphics[width=.6\textwidth]{pics/coefficients-access.png}}
   
 \end{frame}
 
@@ -685,8 +726,10 @@
   Computing gradients is done with the \emph{parameter shift rule} (PSR). E.g. for Pauli gates:
   \[\pdv{f}{\theta_i}=\frac{f\left( \theta_i + s \right) - f\left( \theta_i - s \right)}{2}\]
 
+  \pause
   How many \emph{model evaluations} we need to compute the \emph{full gradient}?
 
+  \pause
   \vfill
   \begin{table}[htbp]
     \centering\begin{tabular}{cc}
@@ -705,6 +748,7 @@
   \centering
   \textcolor{red}{Is this a fair comparison?}
 
+  \pause
   \vspace{2em}
   Not really\dots
 
@@ -732,14 +776,16 @@
   \includegraphics[width=.55\textwidth]{pics/bp.jpeg}
 
   \footnotesize
+  \pause
   \begin{align*}
     \mathrm{Var}\left[ \partial_{\theta_i} C\left( \theta \right) \right]\leq F(n), \\
     F(n)\in O\left( \frac{1}{b^n} \right), \: b>1
   \end{align*}
 
+  \pause
   \begin{itemize}
     \item Different reasons, the main one is the ansatz $W(\theta)$
-    \item \emph{Problem-agnostic} ansatze suffer from BPs with high $n$ and high depths
+    \item \emph{Problem-agnostic} ansatze suffer from BPs with high $n$ and high depths\cite{McClean_2018}
   \end{itemize}
   
   
